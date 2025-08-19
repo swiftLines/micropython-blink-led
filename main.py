@@ -1,19 +1,35 @@
-# 3 Double-blink pattern
+# 4 Alternate two LEDs (onboard + external)
 import machine
 import utime
 
-led = machine.Pin("LED", machine.Pin.OUT)
+onboard = machine.Pin("LED", machine.Pin.OUT)
+ext = machine.Pin(15, machine.Pin.OUT)  # external LED on GP15
 
-def pulse(on_ms, off_ms, count):
-    for _ in range(count):
-        led.value(1)
-        utime.sleep_ms(on_ms)
-        led.value(0)
-        utime.sleep_ms(off_ms)
 while True:
-    # two quick blinks
-    pulse(100, 100, 2)
-    utime.sleep(1.0)
+    onboard.value(1)
+    ext.value(0)
+    utime.sleep(0.3)
+    onboard.value(0)
+    ext.value(1)
+    utime.sleep(0.3)
+
+
+# 3 Double-blink pattern
+# import machine
+# import utime
+
+# led = machine.Pin("LED", machine.Pin.OUT)
+
+# def pulse(on_ms, off_ms, count):
+#     for _ in range(count):
+#         led.value(1)
+#         utime.sleep_ms(on_ms)
+#         led.value(0)
+#         utime.sleep_ms(off_ms)
+# while True:
+#     # two quick blinks
+#     pulse(100, 100, 2)
+#     utime.sleep(1.0)
 
 
 # 2 Change Blink Speed
