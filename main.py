@@ -1,17 +1,41 @@
-# 4 Alternate two LEDs (onboard + external)
+# 5 Button-controlled blink (input + debounce)
 import machine
 import utime
 
-onboard = machine.Pin("LED", machine.Pin.OUT)
-ext = machine.Pin(15, machine.Pin.OUT)  # external LED on GP15
+led = machine.Pin("LED", machine.Pin.OUT)
+btn = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+
+SLOW = 0.5
+FAST = 0.1
+
+def debounced_pressed(pin, delay_ms=20):
+    if not pin.value():
+        return False
+    utime.sleep_ms(delay_ms)
+    return pin.value()
 
 while True:
-    onboard.value(1)
-    ext.value(0)
-    utime.sleep(0.3)
-    onboard.value(0)
-    ext.value(1)
-    utime.sleep(0.3)
+    delay = FAST if debounced_pressed(btn) else SLOW
+    led.value(1)
+    utime.sleep(delay)
+    led.value(0)
+    utime.sleep(delay)
+
+
+# 4 Alternate two LEDs (onboard + external)
+# import machine
+# import utime
+
+# onboard = machine.Pin("LED", machine.Pin.OUT)
+# ext = machine.Pin(15, machine.Pin.OUT)  # external LED on GP15
+
+# while True:
+#     onboard.value(1)
+#     ext.value(0)
+#     utime.sleep(0.3)
+#     onboard.value(0)
+#     ext.value(1)
+#     utime.sleep(0.3)
 
 
 # 3 Double-blink pattern
