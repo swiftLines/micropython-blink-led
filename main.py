@@ -9,17 +9,17 @@ SLOW = 0.5
 FAST = 0.1
 
 def debounced_pressed(pin, delay_ms=20):
-    if not pin.value():
+    v = btn.value()
+    print("button:", v) # 0=not pressed (pull-down), 1=pressed
+    if not pin.value(): 
         return False
     utime.sleep_ms(delay_ms)
     return pin.value()
 
 while True:
     delay = FAST if debounced_pressed(btn) else SLOW
-    led.value(1)
-    utime.sleep(delay)
-    led.value(0)
-    utime.sleep(delay)
+    led.value(1); utime.sleep(delay)
+    led.value(0); utime.sleep(delay)
 
 
 # 4 Alternate two LEDs (onboard + external)
