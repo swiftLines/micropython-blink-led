@@ -1,25 +1,43 @@
-# 5 Button-controlled blink (input + debounce)
 import machine
 import utime
 
-led = machine.Pin("LED", machine.Pin.OUT)
-btn = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+led = machine.PWM(machine.Pin(25))
+led.freq(1000) # 1 kHz PWM
 
-SLOW = 0.5
-FAST = 0.1
-
-def debounced_pressed(pin, delay_ms=20):
-    v = btn.value()
-    print("button:", v) # 0=not pressed (pull-down), 1=pressed
-    if not pin.value(): 
-        return False
-    utime.sleep_ms(delay_ms)
-    return pin.value()
+def ramp(start, stop, step, dwell_ms=2):
+    for duty in range(start, stop, step):
+        led.duty_u16(duty)
+        utime.sleep_ms(dwell_ms)
 
 while True:
-    delay = FAST if debounced_pressed(btn) else SLOW
-    led.value(1); utime.sleep(delay)
-    led.value(0); utime.sleep(delay)
+    ramp(0, 65535, 512)
+    ramp(65535, 0, -512)
+
+
+# 5 Button-controlled blink (input + debounce)
+# import machine
+# import utime
+
+# led = machine.Pin("LED", machine.Pin.OUT)
+# btn = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+
+# SLOW = 0.5
+# FAST = 0.1
+
+# def debounced_pressed(pin, delay_ms=20):
+#     v = btn.value()
+#     print("button:", v) # 0=not pressed (pull-down), 1=pressed
+#     if not pin.value(): 
+#         return False
+#     utime.sleep_ms(delay_ms)
+#     return pin.value()
+
+# while True:
+#     delay = FAST if debounced_pressed(btn) else SLOW
+#     led.value(1)
+#     utime.sleep(delay)
+#     led.value(0)
+#     utime.sleep(delay)
 
 
 # 4 Alternate two LEDs (onboard + external)
